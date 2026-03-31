@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+<meta charset="UTF-8">
+<title>DOKDOK UC</title>
+
+<style>
+body {
+    font-family: Arial;
+    background: #0f172a;
+    color: white;
+    text-align: center;
+}
+
+.container {
+    width: 90%;
+    max-width: 500px;
+    margin: 50px auto;
+    padding: 20px;
+    background: #1e293b;
+    border-radius: 15px;
+}
+
+select, button, input {
+    width: 100%;
+    padding: 10px;
+    margin-top: 15px;
+    border-radius: 10px;
+    border: none;
+}
+
+.payment-box {
+    display: none;
+    margin-top: 20px;
+    padding: 15px;
+    background: #334155;
+    border-radius: 10px;
+}
+
+button {
+    background: gold;
+    cursor: pointer;
+    font-weight: bold;
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+    <h2>DOKDOK UC</h2>
+
+    <select id="paymentMethod" onchange="showPayment()">
+        <option value="">اختر طريقة الدفع</option>
+        <option value="instapay">إنستا باي</option>
+        <option value="vodafone">فودافون كاش</option>
+        <option value="bank">تحويل بنكي</option>
+    </select>
+
+    <div id="instapay" class="payment-box">
+        <p>01278733934</p>
+    </div>
+
+    <div id="vodafone" class="payment-box">
+        <p>01029036285</p>
+    </div>
+
+    <div id="bank" class="payment-box">
+        <p>CIB Bank</p>
+        <p>100047115657</p>
+    </div>
+
+    <input type="text" id="name" placeholder="اسمك">
+
+    <button onclick="confirmPayment()">تم الدفع</button>
+
+    <p id="message"></p>
+</div>
+
+<script>
+function showPayment() {
+    let methods = ["instapay", "vodafone", "bank"];
+    let selected = document.getElementById("paymentMethod").value;
+
+    methods.forEach(m => {
+        document.getElementById(m).style.display = "none";
+    });
+
+    if (selected) {
+        document.getElementById(selected).style.display = "block";
+    }
+}
+
+function confirmPayment() {
+    let method = document.getElementById("paymentMethod").value;
+    let name = document.getElementById("name").value;
+
+    if (method === "" || name === "") {
+        document.getElementById("message").innerText = "❌ لازم تختار طريقة الدفع وتكتب اسمك";
+        return;
+    }
+
+    let orderData = {
+        paymentMethod: method,
+        name: name,
+        date: new Date().toLocaleString()
+    };
+
+    sendOrder(orderData);
+}
+</script>
+
+<!-- 🔥 Firebase (نسخة سهلة ومضمونة) -->
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
+
+<script>
+const firebaseConfig = {
+  apiKey: "AIzaSyA_Tn1Wha1MhULS-sPVArtdjI-ELqa84bs",
+  authDomain: "dokdok-store-uc.firebaseapp.com",
+  databaseURL: "https://dokdok-store-uc-default-rtdb.firebaseio.com",
+  projectId: "dokdok-store-uc",
+  storageBucket: "dokdok-store-uc.firebasestorage.app",
+  messagingSenderId: "412353351450",
+  appId: "1:412353351450:web:cdf0fa5b11b8497acf26a3"
+};
+
+firebase.initializeApp(firebaseConfig);
+const db = firebase.database();
+
+function sendOrder(data) {
+    db.ref("orders").push(data)
+    .then(() => {
+        document.getElementById("message").innerText = "✅ تم إرسال الطلب";
+    })
+    .catch(() => {
+        document.getElementById("message").innerText = "❌ حصل خطأ";
+    });
+}
+</script>
+
+</body>
+</html>
