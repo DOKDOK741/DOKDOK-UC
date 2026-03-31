@@ -92,10 +92,10 @@ function showPayment() {
 }
 
 function confirmPayment() {
-    let method = document.getElementById("paymentMethod").value;
-    let name = document.getElementById("name").value;
+    let method = document.getElementById("paymentMethod").value.trim();
+    let name = document.getElementById("name").value.trim();
 
-    if (method === "" || name === "") {
+    if (!method || !name) {
         document.getElementById("message").innerText = "❌ لازم تختار طريقة الدفع وتكتب اسمك";
         return;
     }
@@ -110,7 +110,6 @@ function confirmPayment() {
 }
 </script>
 
-<!-- 🔥 Firebase (نسخة سهلة ومضمونة) -->
 <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
 <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
 
@@ -133,8 +132,8 @@ function sendOrder(data) {
     .then(() => {
         document.getElementById("message").innerText = "✅ تم إرسال الطلب";
     })
-    .catch(() => {
-        document.getElementById("message").innerText = "❌ حصل خطأ";
+    .catch((error) => {
+        document.getElementById("message").innerText = "❌ " + error.message;
     });
 }
 </script>
